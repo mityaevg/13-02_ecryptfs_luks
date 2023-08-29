@@ -47,18 +47,47 @@ sudo ls -la /home/cryptouser
 
 *В качестве ответа пришлите снимки экрана с поэтапным выполнением задания.*
 
+**Ответ:**
 
-## Дополнительные задания (со звёздочкой*)
+1. Установим поддержку **luks**:
+```
+sudo apt install cryptsetup -y
+```
+<kbd>![](img/luks_support_install.png)</kbd>
+<kbd>![](img/crypt_setup_version.png)</kbd>
 
-Эти задания дополнительные, то есть не обязательные к выполнению, и никак не повлияют на получение вами зачёта по этому домашнему заданию. Вы можете их выполнить, если хотите глубже шире разобраться в материале
+2. Создадим новый раздел размером 100 МБ с помощью утилиты **gparted**:
+```
+sudo apt install gparted -y
+sudo gparted
+```
+<kbd>![](img/luks_partition_created.png)</kbd>
 
-### Задание 3 *
+3. Зашифруйте созданный раздел:
 
-1. Установите **apparmor**.
-2. Повторите эксперимент, указанный в лекции.
-3. Отключите (удалите) apparmor.
+- Зададим тип файловой системы - **luks2** для раздела **/dev/sdb1**:
+```
+sudo cryptsetup -y -v --type luks2 luksFormat /dev/sdb1
+```
+<kbd>![](img/luks_format.png)</kbd>
 
+- Смонтируем раздел:
+```
+sudo cryptsetup luksOpen /dev/sdb1 luks_disk
+ls /dev/mapper/disk
+```
+<kbd>![](img/luks_disk_mount.png)</kbd>
 
-*В качестве ответа пришлите снимки экрана с поэтапным выполнением задания.*
+- Отформатируем раздел:
+```
+sudo dd if=/dev/zero of=/dev/mapper/luks_disk
+sudo mkfs.ext4 /dev/mapper/luks_disk
+```
+<kbd>![](img/partition_formatting.png)</kbd>
 
-
+- Монтирование открытого раздела:
+```
+mkdir .secret
+sudo mount /dev/mapper/luks_disk .secret/
+```
+<kbd>![](img/open_partition_mount.png)</kbd>
