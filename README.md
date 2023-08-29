@@ -61,7 +61,7 @@ sudo apt install cryptsetup -y
 sudo apt install gparted -y
 sudo gparted
 ```
-<kbd>![](img/luks_partition_created.png)</kbd>
+<kbd>![](img/luks_partition_created1.png)</kbd>
 
 3. Зашифруйте созданный раздел:
 
